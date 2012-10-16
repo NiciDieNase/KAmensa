@@ -1,0 +1,19 @@
+* 1. Ebene
+  Dict mit folgenden Keys:
+    - Mensen: ['adenauerring', 'erzberger', 'gottesaue', 'holzgarten', 'moltke', 'tiefenbronner']
+    - Metadaten: 'date', 'import_date'
+
+* 2. Ebene Mensen
+  Dict mit Tagesplänen:
+    Keys sind die Unix-Timestamps der Tage um 0:00.0 Uhr
+
+* 3. Ebene Tagespläne
+  Dict mit den Linien
+    Keys für die Linien
+    'adenauerring':  ['l1', 'l2', 'l3', 'l45', 'schnitzelbar', 'update', 'abend', 'aktion', 'heisstheke', 'nmtisch'
+    'erzberger':     ['wahl1', 'wahl2']
+    'gottesaue':     ['wahl1', 'wahl2']
+    'holzgarten':    ['gut','gut2']
+    'moltke':        ['wahl1', 'wahl2', 'aktion', 'gut', 'buffet', 'schnitzelbar']
+    'tiefenbronner': ['wahl1', 'wahl2', 'gut', 'buffet']
+
