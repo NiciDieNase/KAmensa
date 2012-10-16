@@ -17,3 +17,11 @@
     'moltke':        ['wahl1', 'wahl2', 'aktion', 'gut', 'buffet', 'schnitzelbar']
     'tiefenbronner': ['wahl1', 'wahl2', 'gut', 'buffet']
 
+* 4. Ebene Linie
+  Jede Linie besteht aus einer Liste von Gerichten
+  gibt es keine Gerichte enthält die Liste nur ein Dict mit 'nodata':true
+  Ist die Linie geschlossen ein Dict mit keys 'closing_start' und 'closing_end'
+
+* 5. Ebene Gericht
+  Ein Gericht besteht aus einem Dict mit folgenden Keys
+  ['add', 'bio', 'cow', 'cow_aw', 'dish', 'fish', 'info', 'meal', 'pork', 'price_1', 'price_2', 'price_3', 'price_4', 'price_flag', 'veg', 'vegan']
