@@ -33,17 +33,20 @@ mensaplan = json.loads(handle.read())
 #for item in sorted(mensaplan['moltke'].keys()):
 #   print(datetime.datetime.fromtimestamp(int(item)).strftime('%Y-%m-%d'))
 
-timestamps = sorted(mensaplan['moltke'].keys())
-linien = ['wahl1', 'wahl2', 'aktion', 'gut', 'schnitzelbar', 'buffet']
+#timestamps = sorted(mensaplan['moltke'].keys())
+#linien = ['wahl1', 'wahl2', 'aktion', 'gut', 'schnitzelbar', 'buffet']
+#
+#print (datetime.datetime.fromtimestamp(int(timestamps[3])).strftime('%Y-%m-%d'))
+## loop over lines
+#for line in linien:
+#    print "******************"
+#    current_line = mensaplan['moltke'][timestamps[1]][line]
+#    print line    
+#    print "******************"
+#    # loop over meals in on line
+#    for meal in current_line:
+#        print meal['meal'] +' '+ meal['dish']+' '+meal['info']
+#    print ""
+print mensaplan
 
-print (datetime.datetime.fromtimestamp(int(timestamps[3])).strftime('%Y-%m-%d'))
-# loop over lines
-for line in linien:
-    print "******************"
-    current_line = mensaplan['moltke'][timestamps[1]][line]
-    print line    
-    print "******************"
-    # loop over meals in on line
-    for meal in current_line:
-        print meal['meal'] +' '+ meal['dish']+' '+meal['info']
-    print ""
+#https://jsonapi:AhVai6OoCh3Quoo6ji@www.studentenwerk-karlsruhe.de/json_interface/canteen/

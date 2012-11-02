@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/python2
+#!/usr/bin/python2ö
 # coding: utf8
 import urllib2
 import base64
@@ -8,109 +8,118 @@ from datetime import *
 
 class mensaplan:
 
-    def __init__(self):
-        username = "jsonapi"
-        password = "AhVai6OoCh3Quoo6ji"
-        theurl = 'https://www.studentenwerk-karlsruhe.de/json_interface/canteen/'
+	def __init__(self):
+		username = "jsonapi"
+		password = "AhVai6OoCh3Quoo6ji"
+		theurl = 'https://www.studentenwerk-karlsruhe.de/json_interface/canteen/'
 
-        req = urllib2.Request(theurl)
-        base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
-        req.add_header("Authorization", "Basic %s" % base64string)
+		req = urllib2.Request(theurl)
+		base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
+		req.add_header("Authorization", "Basic %s" % base64string)
 
-        try:
-            handle = urllib2.urlopen(req)
-        except IOError, e:
-            if hasattr(e, 'code'):
-                if e.code != 401:
-                    print 'We got another error'
-                    print e.code
-                else:
-                    print e.headers
-                    print e.headers['www-authenticate']
-                    
-        self.json_response = json.loads(handle.read())
+		try:
+			handle = urllib2.urlopen(req)
+		except IOError, e:
+			if hasattr(e, 'code'):
+				if e.code != 401:
+					print 'We got another error'
+					print e.code
+				else:
+					print e.headers
+					print e.headers['www-authenticate']
+					
+		self.json_response = json.loads(handle.read())
+
+	def meal(self, mensa, line, date = date.today()):
+		timestamp = date.strftime('%s')
+				
+		if (mensa in self.json_response.keys()
+			and timestamp in self.json_response[mensa].keys()
+			and line in self.json_response[mensa][timestamp].keys()):
+			
+			return self.json_response[mensa][timestamp][line]
+		else:
+			return "No Data Available"
+
+	def meal_string(self, mensa, line, date = date.today()):
+		meals = self.meal(mensa,line,date)
+		result = '' + str(keyToName(line)) + ':'
+		for item in meals:
+			if 'nodata' not in item.keys():
+				result += '\t' + item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + ' ' + item['info']
+			else:
+				result += "\tNo Data"
+		return result
+
+	def keys(self, type):	
+		mensen = { 'adenauerring':  ['l1', 'l2', 'l3', 'l45', 'schnitzelbar', 'update', 'abend', 'aktion', 'heisstheke', 'nmtisch'],
+					  'erzberger':	 ['wahl1', 'wahl2'],
+					  'gottesaue':	 ['wahl1', 'wahl2'],
+					  'holzgarten':	['gut','gut2'],
+					  'moltke':		['wahl1', 'wahl2', 'aktion', 'gut', 'buffet', 'schnitzelbar'],
+					  'tiefenbronner': ['wahl1', 'wahl2', 'gut', 'buffet']
+					}
+		meals = ['add', 'bio', 'cow', 'cow_aw', 'dish', 'fish', 'info', 'meal', 'pork', 'price_1', 'price_2', 'price_3', 'price_4', 'price_flag', 'veg', 'vegan']
+		if type == 'mensa':
+			return mensen.keys()
+		elif type in mensen.keys():
+			return mensen[type]
+		elif type == 'meal':
+			return meals
+		else:
+			return 'unknown type'
+
+	def available_dates(self, mensa):
+		return map(lambda x: date.fromtimestamp(int(x)).strftime('%d.%m.%Y'),sorted(self.json_response[mensa].keys()))
 
 
-class mensa:
-    def __init__(self, key, date = date.today()):
-        self.keys = [ 'adenauerring', 'erzberger', 'gottesaue', 'holzgarten', 'moltke', 'tiefenbronner' ]
-#        if key in self.keys:
-            
-            
-class line:
-    def __init__(self):
-        self.keys = { 'adenauerring':  ['l1', 'l2', 'l3', 'l45', 'schnitzelbar', 'update', 'abend', 'aktion', 'heisstheke', 'nmtisch'],
-                      'erzberger':     ['wahl1', 'wahl2'],
-                      'gottesaue':     ['wahl1', 'wahl2'],
-                      'holzgarten':    ['gut','gut2'],
-                      'moltke':        ['wahl1', 'wahl2', 'aktion', 'gut', 'buffet', 'schnitzelbar'],
-                      'tiefenbronner': ['wahl1', 'wahl2', 'gut', 'buffet']
-                    }
-    def getKeys(self):
-        return self.keys
-
-class meal:
-    def __init__(self, values):
-        self.keys = ['add', 'bio', 'cow', 'cow_aw', 'dish', 'fish', 'info', 'meal', 'pork', 'price_1', 'price_2', 'price_3', 'price_4', 'price_flag', 'veg', 'vegan']
-        self.value_map = values
-    
-    def __str__(self):
-# TODO: fix unicode stuff
-        if self.value_map['dish'] != '':
-            returnstring = unicode('%s mit %s (%.2f)', errors='ignore') % (self.value_map['meal'], self.value_map['dish'], self.value_map['price_1'] )
-            return returnstring
-        else:
-            returnstring = unicode('%s (%.2f)', errors='ignore') % (self.value_map['meal'], self.value_map['price_1'] )
-            return returnstring
-
-
-## Mensa und Linien Keys zu Namen
+	## Mapping keys to Names
 def keyToName(key):
-    if key == 'adenauerring':
-        return 'Mensa am Adenauerring'
-    elif key == 'erzberger':
-        return 'Mensa Erzbergstraße'
-    elif key == 'gottesaue':
-        return 'Mensa Schloss Gottesaue'
-    elif key == 'holzgarten':
-        return 'Mensa Holzgartenstraße'
-    elif key == 'moltke':
-        return 'Mensa Moltke'
-    elif key == 'tiefenbronner':
-        return 'Mensa Tiefenbronner Straße'
-    elif key == 'l1':
-        return 'Linie 1'
-    elif key == 'l2': 
-        return 'Linie 2'
-    elif key == 'l3': 
-        return 'Linie 3'
-    elif key == 'l45': 
-        return 'Linie 4/5'
-    elif key == 'schnitzelbar': 
-        return 'Schnitzelbar'
-    elif key == 'update': 
-        return 'L6 Update'
-    elif key == 'abend': 
-        return 'Abend'
-    elif key == 'aktion': 
-        return 'Aktionstheke'
-    elif key == 'heisstheke': 
-        return 'Cafeteria Heiße Theke'
-    elif key == 'nmtisch': 
-        return 'Cafeteria ab 14:30'
-    elif key == 'wahl1': 
-        return 'Wahlessen 1'
-    elif key == 'wahl2': 
-        return 'Wahlessen 2'
-    elif key == 'aktion': 
-        return 'Aktionstheke'
-    elif key == 'gut': 
-        return 'Gut&Günstig'
-    elif key == 'gut2': 
-        return 'Gut&Günstig 2'
-    elif key == 'buffet': 
-        return 'Buffet'
-    elif key == 'schnitzelbar':
-        return 'Schnitzelbar'
-    else:
-        return "unknown key"
+	if key == 'adenauerring':
+		return 'Mensa am Adenauerring'
+	elif key == 'erzberger':
+		return 'Mensa Erzbergstraße'
+	elif key == 'gottesaue':
+		return 'Mensa Schloss Gottesaue'
+	elif key == 'holzgarten':
+		return 'Mensa Holzgartenstraße'
+	elif key == 'moltke':
+		return 'Mensa Moltke'
+	elif key == 'tiefenbronner':
+		return 'Mensa Tiefenbronner Straße'
+	elif key == 'l1':
+		return 'Linie 1'
+	elif key == 'l2': 
+		return 'Linie 2'
+	elif key == 'l3': 
+		return 'Linie 3'
+	elif key == 'l45': 
+		return 'Linie 4/5'
+	elif key == 'schnitzelbar': 
+		return 'Schnitzelbar'
+	elif key == 'update': 
+		return 'L6 Update'
+	elif key == 'abend': 
+		return 'Abend'
+	elif key == 'aktion': 
+		return 'Aktionstheke'
+	elif key == 'heisstheke': 
+		return 'Cafeteria Heiße Theke'
+	elif key == 'nmtisch': 
+		return 'Cafeteria ab 14:30'
+	elif key == 'wahl1': 
+		return 'Wahlessen 1'
+	elif key == 'wahl2': 
+		return 'Wahlessen 2'
+	elif key == 'aktion': 
+		return 'Aktionstheke'
+	elif key == 'gut': 
+		return 'Gut&Guenstig'
+	elif key == 'gut2': 
+		return 'Gut&Guenstig 2'
+	elif key == 'buffet': 
+		return 'Buffet'
+	elif key == 'schnitzelbar':
+		return 'Schnitzelbar'
+	else:
+		return "unknown key"
