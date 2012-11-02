@@ -39,17 +39,23 @@ class mensaplan:
 			
 			return self.json_response[mensa][timestamp][line]
 		else:
-			return "No Data Available"
+			return None
 
 	def meal_string(self, mensa, line, date = date.today()):
+		if date.weekday() > 4 :
+			return "Wochenende"
+
 		meals = self.meal(mensa,line,date)
-		result = '' + str(keyToName(line)) + ':'
-		for item in meals:
-			if 'nodata' not in item.keys():
-				result += '\t' + item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + ' ' + item['info']
-			else:
-				result += "\tNo Data"
-		return result
+		if meals != None :
+			result = '' + str(keyToName(line)) + ':'
+			for item in meals:
+				if 'nodata' not in item.keys():
+					result += '\t' + item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + ' ' + item['info']
+				else:
+					result += "\tNo Data"
+			return result
+		else:
+			return "No Data Available"
 
 	def keys(self, type):	
 		mensen = { 'adenauerring':  ['l1', 'l2', 'l3', 'l45', 'schnitzelbar', 'update', 'abend', 'aktion', 'heisstheke', 'nmtisch'],
