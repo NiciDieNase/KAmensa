@@ -1,5 +1,5 @@
 A small python lib to access mealplans for canteens of Studentenwerk Karlsruhe
 
-The API (if you can call 3 URL an API) and credentials where extracted from the UNIverse Android-App (https://play.google.com/store/apps/details?id=com.studentenwerk&hl=de)
+The API (if you can call 3 URLs an API) and credentials where extracted from the UNIverse Android-App (https://play.google.com/store/apps/details?id=com.studentenwerk&hl=de)
 
 This is still a work in progress!
