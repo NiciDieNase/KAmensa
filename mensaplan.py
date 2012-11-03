@@ -1,52 +1,30 @@
 #!/usr/bin/python2
-import urllib2
-import base64
-import json
+# -*- coding: utf-8 -*-
+import KAMensa
 import datetime
 
-username = "jsonapi"
-password = "AhVai6OoCh3Quoo6ji"
-theurl = 'https://www.studentenwerk-karlsruhe.de/json_interface/canteen/'
+## On weekends, print plan for monday
+date = datetime.date.today();
+if date.weekday() == 5 :
+	date += datetime.timedelta(2)
+elif date.weekday() == 6:
+	date += datetime.timedelta(1)
 
-req = urllib2.Request(theurl)
-base64string = base64.encodestring('%s:%s' % (username, password))[:-1]
-req.add_header("Authorization", "Basic %s" % base64string)
+plan = KAMensa.mensaplan()
 
-try:
-    handle = urllib2.urlopen(req)
-except IOError, e:
-    if hasattr(e, 'code'):
-        if e.code != 401:
-            print 'We got another error'
-            print e.code
-        else:
-            print e.headers
-            print e.headers['www-authenticate']
+header = KAMensa.key_to_name('moltke') + " " + str(date)
 
-mensaplan = json.loads(handle.read())
+print '*'*len(header) +'\n' + header + '\n' + '*'*len(header)
 
-## pretty-print json
-#print json.dumps(mensaplan['moltke'], sort_keys=True, indent=4)
-#print mensaplan['moltke']
-
-## Print timestampes
-#for item in sorted(mensaplan['moltke'].keys()):
-#   print(datetime.datetime.fromtimestamp(int(item)).strftime('%Y-%m-%d'))
-
-#timestamps = sorted(mensaplan['moltke'].keys())
-#linien = ['wahl1', 'wahl2', 'aktion', 'gut', 'schnitzelbar', 'buffet']
-#
-#print (datetime.datetime.fromtimestamp(int(timestamps[3])).strftime('%Y-%m-%d'))
-## loop over lines
-#for line in linien:
-#    print "******************"
-#    current_line = mensaplan['moltke'][timestamps[1]][line]
-#    print line    
-#    print "******************"
-#    # loop over meals in on line
-#    for meal in current_line:
-#        print meal['meal'] +' '+ meal['dish']+' '+meal['info']
-#    print ""
-print mensaplan
-
-#https://jsonapi:AhVai6OoCh3Quoo6ji@www.studentenwerk-karlsruhe.de/json_interface/canteen/
+for line in plan.keys('moltke'):
+	meal = plan.meal('moltke',line,date)
+	if meal != None :
+			# Linie
+			print '\n' + str(KAMensa.key_to_name(line)) + ':'
+			for item in meal:
+				if 'nodata' not in item.keys():
+					print '|-'+ item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + u'€ ' + item['info']
+				else:
+					print "No Data"			
+	else:
+			print 'No Data'
