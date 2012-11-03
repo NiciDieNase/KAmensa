@@ -47,7 +47,7 @@ class mensaplan:
 
 		meals = self.meal(mensa,line,date)
 		if meals != None :
-			result = '' + str(keyToName(line)) + ':'
+			result = '' + str(key_to_name(line)) + ':'
 			for item in meals:
 				if 'nodata' not in item.keys():
 					result += '\t' + item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + ' ' + item['info']
@@ -80,7 +80,7 @@ class mensaplan:
 
 
 	## Mapping keys to Names
-def keyToName(key):
+def key_to_name(key):
 	if key == 'adenauerring':
 		return 'Mensa am Adenauerring'
 	elif key == 'erzberger':
