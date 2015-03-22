@@ -19,6 +19,7 @@ class mensaplan:
 
 		try:
 			handle = urllib2.urlopen(req)
+			self.json_response = json.loads(handle.read())	
 		except IOError, e:
 			if hasattr(e, 'code'):
 				if e.code != 401:
@@ -27,16 +28,12 @@ class mensaplan:
 				else:
 					print e.headers
 					print e.headers['www-authenticate']
-					
-		self.json_response = json.loads(handle.read())
 
 	def meal(self, mensa, line, date = date.today()):
 		timestamp = date.strftime('%s')
-				
 		if (mensa in self.json_response.keys()
 			and timestamp in self.json_response[mensa].keys()
 			and line in self.json_response[mensa][timestamp].keys()):
-			
 			return self.json_response[mensa][timestamp][line]
 		else:
 			return None

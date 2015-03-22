@@ -1,0 +1,18 @@
+mensakey: {
+	unix-timestamp: {
+			linienkey: {
+				   [ //liste von gerichten
+				     	{ // gericht
+							//enthält keys:
+							meal: hauptgericht
+							dish: beilage
+							info: weiter infos					
+	       
+
+Mensa Moltke Linien
+      "aktion"
+      "buffet"
+      "gut"
+      "schnitzelbar"
+      "wahl1"
+      "wahl2"
