@@ -22,10 +22,14 @@ for line in plan.keys('adenauerring'):
 			# Linie
 			print '\n' + str(KAMensa.key_to_name(line)) + ':'
 			for item in meal:
-				print meal
-				#if 'nodata' not in item.keys():
-				#	print '|-'+ item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + u'€ ' + item['info']
-				#else:
-				#	print "No Data"
+				if 'closing_start' not in item.keys():
+					if 'nodata' not in item.keys():
+						print '|-'+ item['meal'] + ' ' + item['dish'] + ' ' + str(item['price_1']) + u'€ ' + item['info']
+					else:
+						print "No Data"
+				else:
+					close_start = datetime.datetime.fromtimestamp(int(item['closing_start'])).strftime('%d. %m. %Y')
+					close_end   = datetime.datetime.fromtimestamp(int(item['closing_end'])).strftime('%d. %m. %Y')
+					print "|- Closed from %s to %s" % (close_start,close_end)
 	else:
 			print 'No Data'

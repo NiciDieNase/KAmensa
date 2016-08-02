@@ -30,6 +30,6 @@ for line in plan.keys('moltke'):
 				else:
 					close_start = datetime.datetime.fromtimestamp(int(item['closing_start'])).strftime('%d. %m. %Y')
 					close_end   = datetime.datetime.fromtimestamp(int(item['closing_end'])).strftime('%d. %m. %Y')
-					print "Closed from %s to %s" % (close_start,close_end)
+					print "|- Closed from %s to %s" % (close_start,close_end)
 	else:
 			print 'No Data'
